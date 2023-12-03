@@ -3,7 +3,12 @@ const { formatEvent, formatBooking } = require("./formatting");
 const Booking = require("../../models/booking");
 
 module.exports = {
-  bookings: async () => {
+  bookings: async (args, req) => {
+    // check authentication
+    if (!req.isAuth) {
+      throw new Error("Unauthenticated");
+    }
+
     try {
       const bookings = await Booking.find();
       return bookings.map((booking) => {
@@ -13,11 +18,16 @@ module.exports = {
       throw err;
     }
   },
-  bookEvent: async (args) => {
+  bookEvent: async (args, req) => {
+    // check authentication
+    if (!req.isAuth) {
+      throw new Error("Unauthenticated");
+    }
+
     try {
       const booking = new Booking({
         event: args.eventId,
-        user: "65673dfacba3cce95275f83b",
+        user: req.userId,
       });
 
       const result = await booking.save();
@@ -27,7 +37,12 @@ module.exports = {
       throw err;
     }
   },
-  cancelBooking: async (args) => {
+  cancelBooking: async (args, req) => {
+    // check authentication
+    if (!req.isAuth) {
+      throw new Error("Unauthenticated");
+    }
+
     try {
       const booking = await Booking.findById(args.bookingId).populate("event");
       const event = formatEvent(booking.event);

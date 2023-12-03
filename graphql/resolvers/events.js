@@ -2,6 +2,7 @@ const { dateToString } = require("../../helpers/date");
 const { formatEvent } = require("./formatting");
 
 const Event = require("../../models/event");
+const User = require("../../models/user");
 
 module.exports = {
   events: async () => {
@@ -15,13 +16,18 @@ module.exports = {
       throw err;
     }
   },
-  createEvent: async (args) => {
+  createEvent: async (args, req) => {
+    // check authentication
+    if (!req.isAuth) {
+      throw new Error("Unauthenticated");
+    }
+
     const event = new Event({
       title: args.eventInput.title,
       description: args.eventInput.description,
       price: +args.eventInput.price,
       date: dateToString(args.eventInput.date),
-      createdBy: "65673dfacba3cce95275f83b",
+      createdBy: req.userId,
     });
 
     try {
@@ -29,7 +35,7 @@ module.exports = {
       const createdEvent = formatEvent(result);
 
       // Store event in user created events list
-      const user = await User.findById("65673dfacba3cce95275f83b");
+      const user = await User.findById(req.userId);
       if (!user) {
         throw new Error("Invalid user.");
       }
