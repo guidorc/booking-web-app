@@ -1,7 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 
-function BookingsPage() {
-  return <h1>Bookings Page</h1>;
+class BookingsPage extends Component {
+  render() {
+    return <h1>Bookings Page</h1>;
+  }
 }
 
 export default BookingsPage;

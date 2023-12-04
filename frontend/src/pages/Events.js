@@ -1,7 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 
-function EventsPage() {
-  return <h1>Events Page</h1>;
+class EventsPage extends Component {
+  render() {
+    return <h1>Events Page</h1>;
+  }
 }
 
 export default EventsPage;
