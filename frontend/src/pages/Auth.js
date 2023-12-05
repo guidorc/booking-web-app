@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 
 import "./Auth.css";
+import AuthContext from "../context/auth-context";
 
 class AuthPage extends Component {
   state = {
     isSignin: true,
   };
+
+  static contextType = AuthContext;
 
   constructor(props) {
     super(props);
@@ -61,12 +64,18 @@ class AuthPage extends Component {
       },
     });
 
-    if (response.status != 200 && response.status != 201) {
+    if (response.status !== 200 && response.status !== 201) {
       throw new Error("Sign up failed");
     }
 
-    const data = await response.json();
-    console.log({ data });
+    const parsedResponse = await response.json();
+    if (this.state.isSignin) {
+      this.context.signin(
+        parsedResponse.data.signin.token,
+        parsedResponse.data.signin.userId,
+        parsedResponse.data.signin.tokenExpiration
+      );
+    }
   };
 
   render() {
