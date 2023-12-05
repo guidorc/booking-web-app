@@ -29,6 +29,11 @@ function MainNavigation(props) {
                     <NavLink to="/bookings">Bookings</NavLink>
                   </li>
                 )}
+                {context.token && (
+                  <li>
+                    <button onClick={context.signout}>Signout</button>
+                  </li>
+                )}
               </ul>
             </div>
           </header>
