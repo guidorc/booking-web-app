@@ -42,7 +42,6 @@ module.exports = {
         args.userInput.password,
         user.password
       );
-      console.log(validPassword);
       if (!validPassword) {
         throw new Error("Invalid Credentials");
       }
