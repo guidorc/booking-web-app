@@ -36,7 +36,7 @@ class App extends Component {
           <AuthContext.Provider
             value={{
               token: this.state.token,
-              userId: this.state.token,
+              userId: this.state.userId,
               signin: this.signin,
               signout: this.signout,
             }}

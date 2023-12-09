@@ -12,7 +12,7 @@ function MainNavigation(props) {
         return (
           <header className="main-navigation">
             <div className="main-navigation__logo">
-              <h1>EasyEvent</h1>
+              <h1>Easy Booking</h1>
             </div>
             <div className="main-navigation__items">
               <ul>

@@ -21,9 +21,9 @@ body {
 
 .form-actions button,
 .btn {
-  background: orange;
+  background: purple;
   font: inherit;
-  border: 1px solid orange;
+  border: 1px solid purple;
   border-radius: 3px;
   padding: 0.25rem 1rem;
   margin-right: 1rem;
@@ -36,6 +36,6 @@ body {
 .form-actions button:active,
 .btn:hover,
 .btn:active {
-  background: rgb(214, 141, 6);
-  border-color: rgb(214, 141, 6);
+  background: rgb(88, 3, 122);
+  border-color: rgb(88, 3, 122);
 }
