@@ -2,6 +2,9 @@
   "env": {
     "MONGO_USER": "admin",
     "MONGO_PASSWORD": "",
-    "MONGO_DB": "BOOKING"
+    "MONGO_DB": "BOOKING",
+    "JWT_KEY": "",
+    "JWT_EXPIRATION_TIME": "1h",
+    "TOKEN_EXPIRATION": 1
   }
 }
