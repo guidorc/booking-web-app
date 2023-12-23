@@ -3,6 +3,7 @@ import React from "react";
 import "./EventItem.css";
 
 const eventItem = (props) => {
+
   return (
     <li key={props.eventId} className="event__list-item">
       <div>
@@ -13,7 +14,7 @@ const eventItem = (props) => {
         {props.userId === props.creatorId ? (
           <p>You're the owner of this event</p>
         ) : (
-          <button className="btn">View Details</button>
+          <button className="btn" onClick={props.onDetails.bind(this, props.eventId)}>View Details</button>
         )}
       </div>
     </li>
