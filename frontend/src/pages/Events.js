@@ -6,11 +6,13 @@ import Modal from "../components/Modal/Modal";
 import Backdrop from "../components/Backdrop/Backdrop";
 import EventList from "../components/Events/EventList";
 import AuthContext from "../context/auth-context";
+import Spinner from "../components/Spinner/Spinner";
 
 class EventsPage extends Component {
   state = {
     creating: false,
     events: [],
+    isLoading: false
   };
 
   static contextType = AuthContext;
@@ -32,8 +34,10 @@ class EventsPage extends Component {
   };
 
   fetchEvents = async () => {
-    const requestBody = {
-      query: `
+    try {
+      this.setState({ isLoading: true })
+      const requestBody = {
+        query: `
         query {
           events {
             _id
@@ -48,23 +52,28 @@ class EventsPage extends Component {
           }
         }
       `,
-    };
+      };
 
-    const response = await fetch("http://localhost:8000/graphql", {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      const response = await fetch("http://localhost:8000/graphql", {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (response.status !== 200 && response.status !== 201) {
-      throw new Error("Creation failed");
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error("Creation failed");
+      }
+
+      const resData = await response.json();
+      const events = resData.data.events;
+      this.setState({ events: events, isLoading: false });
+    } catch (err) {
+      this.setState({ isLoading: false });
+      throw err;
     }
 
-    const resData = await response.json();
-    const events = resData.data.events;
-    this.setState({ events: events });
   };
 
   modalCancelHandler = () => {
@@ -96,10 +105,6 @@ class EventsPage extends Component {
             description
             price
             date
-            createdBy {
-              _id
-              email
-            }
           }
         }
       `,
@@ -118,7 +123,22 @@ class EventsPage extends Component {
       throw new Error("Creation failed");
     }
 
-    this.fetchEvents();
+    const resData = await response.json();
+
+    this.setState(prevState => {
+      const updatedEvents = [...prevState.events]
+      updatedEvents.push({
+        _id: resData.data.createEvent._id,
+        title: resData.data.createEvent.title,
+        description: resData.data.createEvent.description,
+        price: resData.data.createEvent.price,
+        date: resData.data.createEvent.date,
+        createdBy: {
+          _id: this.context.userId,
+        }
+      });
+      return { events: updatedEvents };
+    });
   };
 
   render() {
@@ -169,10 +189,14 @@ class EventsPage extends Component {
             </button>
           </div>
         )}
-        <EventList
-          events={this.state.events}
-          authUserId={this.context.userId}
-        />
+        {this.state.isLoading ?
+          (<Spinner />) :
+          (<EventList
+            events={this.state.events}
+            authUserId={this.context.userId}
+          />)
+        }
+
       </React.Fragment>
     );
   }
