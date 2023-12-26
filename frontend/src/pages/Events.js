@@ -142,7 +142,35 @@ class EventsPage extends Component {
     });
   };
 
-  bookEventHandler = () => { }
+  bookEventHandler = async (eventId) => {
+    const requestBody = {
+      query: `
+        mutation {
+          bookEvent(eventId: "${eventId}") {
+            _id
+          }
+        }
+      `,
+    };
+
+    const response = await fetch("http://localhost:8000/graphql", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.context.token,
+      },
+    });
+
+    if (response.status !== 200 && response.status !== 201) {
+      throw new Error("Creation failed");
+    };
+
+    console.log(response);
+
+    this.setState({ selectedEvent: null });
+    return response
+  }
 
   onViewDetailsHandler = (eventId) => {
     this.setState(prevState => {
@@ -200,6 +228,7 @@ class EventsPage extends Component {
             onCancel={this.modalCancelHandler}
             onConfirm={this.bookEventHandler}
             confirmText="Book"
+            eventId={this.state.selectedEvent._id}
           >
             <h1>{this.state.selectedEvent.title}</h1>
             <h2>${this.state.selectedEvent.price} - {new Date(this.state.selectedEvent.date).toLocaleDateString()}</h2>
