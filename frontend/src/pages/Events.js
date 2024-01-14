@@ -16,6 +16,8 @@ class EventsPage extends Component {
     selectedEvent: null
   };
 
+  isActive = true;
+
   static contextType = AuthContext;
 
   constructor(props) {
@@ -69,10 +71,15 @@ class EventsPage extends Component {
 
       const resData = await response.json();
       const events = resData.data.events;
-      this.setState({ events: events, isLoading: false });
+      if (this.isActive) {
+        // only update state if component is active
+        this.setState({ events: events, isLoading: false });
+      }
     } catch (err) {
-      this.setState({ isLoading: false });
-      throw err;
+      if (this.isActive) {
+        this.setState({ isLoading: false });
+        throw err;
+      }
     }
 
   };
@@ -166,10 +173,8 @@ class EventsPage extends Component {
       throw new Error("Creation failed");
     };
 
-    console.log(response);
-
     this.setState({ selectedEvent: null });
-    return response
+    return response;
   }
 
   onViewDetailsHandler = (eventId) => {
@@ -177,6 +182,11 @@ class EventsPage extends Component {
       const selectedEvent = prevState.events.find(e => e._id === eventId);
       return { selectedEvent: selectedEvent };
     })
+  }
+
+  // prevent fetch promise from fullfilling if component is unmounted
+  componentWillUnmount() {
+    this.isActive = false;
   }
 
   render() {

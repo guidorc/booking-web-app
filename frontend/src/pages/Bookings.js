@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import BookingsList from "../components/Bookings/BookingsList";
+import AuthContext from "../context/auth-context";
+import Spinner from "../components/Spinner/Spinner";
 
 class BookingsPage extends Component {
   state = {
@@ -8,8 +10,14 @@ class BookingsPage extends Component {
     isLoading: false
   }
 
+  static contextType = AuthContext;
+
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    this.fetchBookings();
   }
 
   fetchBookings = async () => {
@@ -20,7 +28,10 @@ class BookingsPage extends Component {
         query {
           bookings {
             _id
-            event
+            event {
+              _id
+              title
+              date
             }
           }
         }
@@ -32,11 +43,12 @@ class BookingsPage extends Component {
         body: JSON.stringify(requestBody),
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + this.context.token,
         },
       });
 
       if (response.status !== 200 && response.status !== 201) {
-        throw new Error("Creation failed");
+        throw new Error("Unable to retrieve bookings");
       }
 
       const resData = await response.json();
@@ -50,12 +62,14 @@ class BookingsPage extends Component {
   };
 
   render() {
-    return (<div>
-      <BookingsList
-        bookings={this.state.bookings}
-      />
-    </div>);
-  }
+    return (
+    <React.Fragment>
+      {this.state.isLoading ?
+          (<Spinner />) :
+          (<BookingsList bookings={this.state.bookings}/>)
+      }
+    </React.Fragment>  
+  )}
 }
 
 export default BookingsPage;
