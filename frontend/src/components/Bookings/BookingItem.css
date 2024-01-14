@@ -1,25 +1,24 @@
 .bookings__list-item {
-    margin: 1rem 0;
-    padding: 1rem;
-    border: 1px solid purple;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .bookings__list-item h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: purple;
-  }
-  
-  .bookings__list-item h2 {
-    margin: 0;
-    font-size: 1rem;
-    color: gray;
-  }
-  
-  .bookings__list-item p {
-    margin: 0;
-  }
-  
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border: 1px solid purple;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bookings__list-item h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: purple;
+}
+
+.bookings__list-item h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: gray;
+}
+
+.bookings__list-item p {
+  margin: 0;
+}
